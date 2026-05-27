@@ -74,7 +74,7 @@ func resourceGroupMembersCreate(ctx context.Context, d *schema.ResourceData, met
 	gn := d.Get("name").(string)
 	fullResourceName := dn + GROUP_SEPARATOR + gn
 
-	_, err := zmsClient.GetGroup(dn, gn)
+	_, err := zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -112,7 +112,7 @@ func resourceGroupMembersRead(_ context.Context, d *schema.ResourceData, meta in
 		return diag.FromErr(err)
 	}
 
-	group, err := zmsClient.GetGroup(dn, gn)
+	group, err := zmsClient.GetGroup(dn, gn, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -151,7 +151,7 @@ func resourceGroupMembersUpdate(ctx context.Context, d *schema.ResourceData, met
 	membersToDelete := make([]*zms.GroupMember, 0)
 	membersToAdd := make([]*zms.GroupMember, 0)
 
-	_, err = zmsClient.GetGroup(dn, gn)
+	_, err = zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -177,7 +177,7 @@ func resourceGroupMembersDelete(_ context.Context, d *schema.ResourceData, meta 
 		return diag.FromErr(err)
 	}
 	auditRef := d.Get("audit_ref").(string)
-	group, err := zmsClient.GetGroup(dn, gn)
+	group, err := zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		switch v := err.(type) {
 		case rdl.ResourceError:

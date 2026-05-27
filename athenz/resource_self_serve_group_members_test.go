@@ -155,7 +155,7 @@ func TestAccSelfServeGroupMembersExternalMembers(t *testing.T) {
 func cleanAllAccTestSelfServeGroupMembers(domain string, groups []string) {
 	zmsClient := testAccProvider.Meta().(client.ZmsClient)
 	for _, groupName := range groups {
-		_, err := zmsClient.GetGroup(domain, groupName)
+		_, err := zmsClient.GetGroup(domain, groupName, nil)
 		if err == nil {
 			if err = zmsClient.DeleteGroup(domain, groupName, AUDIT_REF); err != nil {
 				log.Printf("error deleting Group %s: %s", groupName, err)
@@ -186,7 +186,7 @@ func testAccCheckSelfServeGroupMembersExists(n string) resource.TestCheckFunc {
 		dn, gn := fullResourceName[0], fullResourceName[1]
 
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		_, err := zmsClient.GetGroup(dn, gn)
+		_, err := zmsClient.GetGroup(dn, gn, nil)
 		if err != nil {
 			group := zms.Group{
 				Name: zms.ResourceName(gn),
@@ -202,7 +202,7 @@ func testAccCheckSelfServeGroupMembersExists(n string) resource.TestCheckFunc {
 func testAccCheckExternalGroupMemberStillExists(domain, group, member string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		groupData, err := zmsClient.GetGroup(domain, group)
+		groupData, err := zmsClient.GetGroup(domain, group, nil)
 		if err != nil {
 			return err
 		}
@@ -281,7 +281,7 @@ func testAccCheckSelfServeGroupMembersDestroy(s *terraform.State) error {
 		fullResourceName := strings.Split(rs.Primary.ID, GROUP_SEPARATOR)
 		dn, gn := fullResourceName[0], fullResourceName[1]
 
-		group, err := zmsClient.GetGroup(dn, gn)
+		group, err := zmsClient.GetGroup(dn, gn, nil)
 		if err == nil {
 			if len(group.GroupMembers) > 0 {
 				return fmt.Errorf("athenz Self Serve Group Members still exists")
@@ -304,7 +304,7 @@ func testAccCheckSelfServeGroupExternalMembersDestroy(s *terraform.State) error 
 		fullResourceName := strings.Split(rs.Primary.ID, GROUP_SEPARATOR)
 		dn, gn := fullResourceName[0], fullResourceName[1]
 
-		group, err := zmsClient.GetGroup(dn, gn)
+		group, err := zmsClient.GetGroup(dn, gn, nil)
 		if err == nil {
 			if len(group.GroupMembers) == 0 {
 				return fmt.Errorf("athenz ext group member should be present")

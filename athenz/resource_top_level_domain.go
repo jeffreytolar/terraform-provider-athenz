@@ -98,7 +98,7 @@ func resourceTopLevelDomainRead(ctx context.Context, d *schema.ResourceData, met
 	if err = d.Set("name", domainName); err != nil {
 		return diag.FromErr(err)
 	}
-	adminRole, err := zmsClient.GetRole(domainName, "admin")
+	adminRole, err := zmsClient.GetRole(domainName, "admin", nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

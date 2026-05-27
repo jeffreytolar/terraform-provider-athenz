@@ -105,18 +105,18 @@ func (mr *MockZmsClientMockRecorder) DeleteRole(domain, roleName, auditRef inter
 }
 
 // GetGroup mocks base method.
-func (m *MockZmsClient) GetGroup(domain, groupName string) (*zms.Group, error) {
+func (m *MockZmsClient) GetGroup(domain, groupName string, pending *bool) (*zms.Group, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetGroup", domain, groupName)
+	ret := m.ctrl.Call(m, "GetGroup", domain, groupName, pending)
 	ret0, _ := ret[0].(*zms.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetGroup indicates an expected call of GetGroup.
-func (mr *MockZmsClientMockRecorder) GetGroup(domain, groupName interface{}) *gomock.Call {
+func (mr *MockZmsClientMockRecorder) GetGroup(domain, groupName, pending interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGroup", reflect.TypeOf((*MockZmsClient)(nil).GetGroup), domain, groupName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGroup", reflect.TypeOf((*MockZmsClient)(nil).GetGroup), domain, groupName, pending)
 }
 
 // GetPolicy mocks base method.
@@ -135,18 +135,18 @@ func (mr *MockZmsClientMockRecorder) GetPolicy(domain, policy interface{}) *gomo
 }
 
 // GetRole mocks base method.
-func (m *MockZmsClient) GetRole(domain, roleName string) (*zms.Role, error) {
+func (m *MockZmsClient) GetRole(domain, roleName string, expand, pending *bool) (*zms.Role, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRole", domain, roleName)
+	ret := m.ctrl.Call(m, "GetRole", domain, roleName, expand, pending)
 	ret0, _ := ret[0].(*zms.Role)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetRole indicates an expected call of GetRole.
-func (mr *MockZmsClientMockRecorder) GetRole(domain, roleName interface{}) *gomock.Call {
+func (mr *MockZmsClientMockRecorder) GetRole(domain, roleName, expand, pending interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRole", reflect.TypeOf((*MockZmsClient)(nil).GetRole), domain, roleName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRole", reflect.TypeOf((*MockZmsClient)(nil).GetRole), domain, roleName, expand, pending)
 }
 
 // PutGroup mocks base method.

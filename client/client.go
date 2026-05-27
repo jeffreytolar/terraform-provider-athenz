@@ -26,7 +26,7 @@ var retryDelays = []time.Duration{
 }
 
 type ZmsClient interface {
-	GetRole(domain string, roleName string) (*zms.Role, error)
+	GetRole(domain string, roleName string, expand *bool, pending *bool) (*zms.Role, error)
 	DeleteRole(domain string, roleName string, auditRef string) error
 	PutRole(domain string, roleName string, auditRef string, role *zms.Role) error
 	PutMembership(domain string, roleName string, memberName zms.MemberName, auditRef string, membership *zms.Membership) error
@@ -34,7 +34,7 @@ type ZmsClient interface {
 	PutPolicy(domain string, policyName string, auditRef string, policy *zms.Policy) error
 	GetPolicy(domain string, policy string) (*zms.Policy, error)
 	DeletePolicy(domain string, policyName string, auditRef string) error
-	GetGroup(domain string, groupName string) (*zms.Group, error)
+	GetGroup(domain string, groupName string, pending *bool) (*zms.Group, error)
 	DeleteGroup(domain string, groupName string, auditRef string) error
 	PutGroup(domain string, groupName string, auditRef string, group *zms.Group) error
 	DeleteGroupMembership(domain string, groupName string, member zms.GroupMemberName, auditRef string) error
@@ -582,7 +582,7 @@ func (c Client) DeleteGroup(domain string, groupName string, auditRef string) er
 	return fmt.Errorf("too many requests, retried 3 times but still failed: %w", err)
 }
 
-func (c Client) GetGroup(domain string, groupName string) (*zms.Group, error) {
+func (c Client) GetGroup(domain string, groupName string, pending *bool) (*zms.Group, error) {
 	var (
 		group *zms.Group
 		err   error
@@ -592,7 +592,7 @@ func (c Client) GetGroup(domain string, groupName string) (*zms.Group, error) {
 		if delay > 0 {
 			time.Sleep(delay)
 		}
-		group, err = zmsClient.GetGroup(zms.DomainName(domain), zms.EntityName(groupName), nil, nil)
+		group, err = zmsClient.GetGroup(zms.DomainName(domain), zms.EntityName(groupName), nil, pending)
 		if errObj, ok := err.(rdl.ResourceError); ok && errObj.Code == ErrCodeRateLimit {
 			continue
 		}
@@ -672,7 +672,7 @@ func (c Client) PutAssertionConditions(domainName string, policyName string, ass
 	return nil, fmt.Errorf("too many requests, retried 3 times but still failed: %w", err)
 }
 
-func (c Client) GetRole(domain string, roleName string) (*zms.Role, error) {
+func (c Client) GetRole(domain string, roleName string, expand *bool, pending *bool) (*zms.Role, error) {
 	var (
 		role *zms.Role
 		err  error
@@ -682,7 +682,7 @@ func (c Client) GetRole(domain string, roleName string) (*zms.Role, error) {
 		if delay > 0 {
 			time.Sleep(delay)
 		}
-		role, err = zmsClient.GetRole(zms.DomainName(domain), zms.EntityName(roleName), nil, nil, nil)
+		role, err = zmsClient.GetRole(zms.DomainName(domain), zms.EntityName(roleName), nil, expand, pending)
 		if errObj, ok := err.(rdl.ResourceError); ok && errObj.Code == ErrCodeRateLimit {
 			continue
 		}

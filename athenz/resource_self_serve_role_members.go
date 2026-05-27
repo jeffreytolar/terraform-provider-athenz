@@ -78,7 +78,7 @@ func resourceSelfServeRoleMembersCreate(ctx context.Context, d *schema.ResourceD
 	rn := d.Get("name").(string)
 	fullResourceName := dn + ROLE_SEPARATOR + rn
 
-	_, err := zmsClient.GetRole(dn, rn)
+	_, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -116,7 +116,7 @@ func resourceSelfServeRoleMembersRead(_ context.Context, d *schema.ResourceData,
 	if err = d.Set("name", rn); err != nil {
 		return diag.FromErr(err)
 	}
-	_, err = zmsClient.GetRole(dn, rn)
+	_, err = zmsClient.GetRole(dn, rn, nil, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -158,7 +158,7 @@ func resourceSelfServeRoleMembersUpdate(ctx context.Context, d *schema.ResourceD
 	membersToDelete := make([]*zms.RoleMember, 0)
 	membersToAdd := make([]*zms.RoleMember, 0)
 
-	_, err = zmsClient.GetRole(dn, rn)
+	_, err = zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

@@ -11,9 +11,22 @@ import (
 )
 
 func DataSourceRole() *schema.Resource {
+	s := dataSourceRoleSchema()
+	s["expand"] = &schema.Schema{
+		Type:        schema.TypeBool,
+		Description: "If set, ZMS will expand delegated and group memberships in the returned role",
+		Optional:    true,
+		Default:     false,
+	}
+	s["pending"] = &schema.Schema{
+		Type:        schema.TypeBool,
+		Description: "If set, ZMS will include pending members in the returned role",
+		Optional:    true,
+		Default:     false,
+	}
 	return &schema.Resource{
 		ReadContext: dataSourceRoleRead,
-		Schema:      dataSourceRoleSchema(),
+		Schema:      s,
 	}
 }
 
@@ -24,7 +37,9 @@ func dataSourceRoleRead(_ context.Context, d *schema.ResourceData, meta interfac
 	rn := d.Get("name").(string)
 	fullResourceName := dn + ROLE_SEPARATOR + rn
 
-	role, err := zmsClient.GetRole(dn, rn)
+	expand := d.Get("expand").(bool)
+	pending := d.Get("pending").(bool)
+	role, err := zmsClient.GetRole(dn, rn, &expand, &pending)
 
 	switch v := err.(type) {
 	case rdl.ResourceError:

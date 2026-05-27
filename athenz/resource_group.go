@@ -173,7 +173,7 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, meta inter
 	dn := d.Get("domain").(string)
 	gn := d.Get("name").(string)
 	fullResourceName := dn + GROUP_SEPARATOR + gn
-	groupCheck, err := zmsClient.GetGroup(dn, gn)
+	groupCheck, err := zmsClient.GetGroup(dn, gn, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -255,7 +255,7 @@ func resourceGroupRead(_ context.Context, d *schema.ResourceData, meta interface
 		return diag.FromErr(err)
 	}
 
-	group, err := zmsClient.GetGroup(dn, gn)
+	group, err := zmsClient.GetGroup(dn, gn, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -377,7 +377,7 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, meta inter
 		return diag.FromErr(err)
 	}
 	auditRef := d.Get("audit_ref").(string)
-	group, err := zmsClient.GetGroup(dn, gn)
+	group, err := zmsClient.GetGroup(dn, gn, nil)
 
 	if err != nil {
 		return diag.FromErr(err)

@@ -164,7 +164,7 @@ func ResourceRoleMeta() *schema.Resource {
 
 func createNewRoleIfNecessary(zmsClient client.ZmsClient, dn, rn string) error {
 	// if role exists already, we don't need to create it
-	_, err := zmsClient.GetRole(dn, rn)
+	_, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err == nil {
 		return nil
 	}
@@ -209,7 +209,7 @@ func resourceRoleMetaCreate(ctx context.Context, d *schema.ResourceData, meta in
 
 func updateRoleMeta(zmsClient client.ZmsClient, dn, rn string, d *schema.ResourceData) diag.Diagnostics {
 
-	role, err := zmsClient.GetRole(dn, rn)
+	role, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.Errorf("unable to fetch role %s in domain %s: %v", rn, dn, err)
 	}
@@ -319,7 +319,7 @@ func resourceRoleMetaRead(_ context.Context, d *schema.ResourceData, meta interf
 	if err = d.Set("name", rn); err != nil {
 		return diag.FromErr(err)
 	}
-	role, err := zmsClient.GetRole(dn, rn)
+	role, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

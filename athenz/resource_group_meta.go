@@ -126,7 +126,7 @@ func ResourceGroupMeta() *schema.Resource {
 
 func createNewGroupIfNecessary(zmsClient client.ZmsClient, dn, gn string) error {
 	// if group exists already, we don't need to create it
-	_, err := zmsClient.GetGroup(dn, gn)
+	_, err := zmsClient.GetGroup(dn, gn, nil)
 	if err == nil {
 		return nil
 	}
@@ -171,7 +171,7 @@ func resourceGroupMetaCreate(ctx context.Context, d *schema.ResourceData, meta i
 
 func updateGroupMeta(zmsClient client.ZmsClient, dn, gn string, d *schema.ResourceData) diag.Diagnostics {
 
-	group, err := zmsClient.GetGroup(dn, gn)
+	group, err := zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		return diag.Errorf("unable to fetch group %s in domain %s: %v", gn, dn, err)
 	}
@@ -247,7 +247,7 @@ func resourceGroupMetaRead(_ context.Context, d *schema.ResourceData, meta inter
 	if err = d.Set("name", gn); err != nil {
 		return diag.FromErr(err)
 	}
-	group, err := zmsClient.GetGroup(dn, gn)
+	group, err := zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

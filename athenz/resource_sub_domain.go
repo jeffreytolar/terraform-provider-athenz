@@ -123,7 +123,7 @@ func resourceSubDomainRead(ctx context.Context, d *schema.ResourceData, meta int
 		return diag.Errorf("error retrieving Athenz Sub Domain - Make sure your cert/key are valid")
 	}
 
-	adminRole, err := zmsClient.GetRole(fullyQualifiedName, "admin")
+	adminRole, err := zmsClient.GetRole(fullyQualifiedName, "admin", nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

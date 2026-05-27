@@ -66,7 +66,7 @@ func TestAccRoleMetaBasic(t *testing.T) {
 
 func cleanAccTestRoleMeta(domainName, roleName string) {
 	zmsClient := testAccProvider.Meta().(client.ZmsClient)
-	_, err := zmsClient.GetRole(domainName, roleName)
+	_, err := zmsClient.GetRole(domainName, roleName, nil, nil)
 	if err == nil {
 		var zero int32
 		zero = 0
@@ -117,7 +117,7 @@ func testAccCheckRoleMetaExists(resource string) resource.TestCheckFunc {
 			return err
 		}
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		role, err := zmsClient.GetRole(dn, rn)
+		role, err := zmsClient.GetRole(dn, rn, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -139,7 +139,7 @@ func testAccCheckRoleMetaDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		role, err := zmsClient.GetRole(dn, rn)
+		role, err := zmsClient.GetRole(dn, rn, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -245,7 +245,7 @@ func testAccCheckRoleMetaResourceStateDeleteDestroy(s *terraform.State) error {
 			return err
 		}
 		// make sure our role is deleted and 404 is returned
-		_, err = zmsClient.GetRole(dn, rn)
+		_, err = zmsClient.GetRole(dn, rn, nil, nil)
 		if err == nil {
 			_ = zmsClient.DeleteRole(dn, rn, AUDIT_REF)
 			return fmt.Errorf("athenz role still exists")

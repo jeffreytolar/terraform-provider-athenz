@@ -101,7 +101,7 @@ func createTestGroupForMembers(dn, gn string) error {
 func cleanAllAccTestGroupMembers(domain string, groups []string) {
 	zmsClient := testAccProvider.Meta().(client.ZmsClient)
 	for _, groupName := range groups {
-		_, err := zmsClient.GetGroup(domain, groupName)
+		_, err := zmsClient.GetGroup(domain, groupName, nil)
 		if err == nil {
 			if err = zmsClient.DeleteGroup(domain, groupName, AUDIT_REF); err != nil {
 				log.Printf("error deleting Group %s: %s", groupName, err)
@@ -125,7 +125,7 @@ func testAccCheckGroupMembersExists(resourceName string) resource.TestCheckFunc 
 		dn, gn := fullResourceName[0], fullResourceName[1]
 
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		_, err := zmsClient.GetGroup(dn, gn)
+		_, err := zmsClient.GetGroup(dn, gn, nil)
 		if err != nil {
 			return err
 		}
@@ -144,7 +144,7 @@ func testAccCheckGroupMembersDestroy(s *terraform.State) error {
 		fullResourceName := strings.Split(rs.Primary.ID, GROUP_SEPARATOR)
 		dn, gn := fullResourceName[0], fullResourceName[1]
 
-		group, err := zmsClient.GetGroup(dn, gn)
+		group, err := zmsClient.GetGroup(dn, gn, nil)
 		if err == nil {
 			if group.GroupMembers != nil && len(group.GroupMembers) > 0 {
 				return fmt.Errorf("athenz Group Members still exists")

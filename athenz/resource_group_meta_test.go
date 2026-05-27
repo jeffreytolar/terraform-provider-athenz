@@ -59,7 +59,7 @@ func TestAccGroupMetaBasic(t *testing.T) {
 
 func cleanAccTestGroupMeta(domainName, groupName string) {
 	zmsClient := testAccProvider.Meta().(client.ZmsClient)
-	_, err := zmsClient.GetGroup(domainName, groupName)
+	_, err := zmsClient.GetGroup(domainName, groupName, nil)
 	if err == nil {
 		var zero int32
 		zero = 0
@@ -102,7 +102,7 @@ func testAccCheckGroupMetaExists(resource string) resource.TestCheckFunc {
 			return err
 		}
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		group, err := zmsClient.GetGroup(dn, gn)
+		group, err := zmsClient.GetGroup(dn, gn, nil)
 		if err != nil {
 			return err
 		}
@@ -127,7 +127,7 @@ func testAccCheckGroupMetaDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		group, err := zmsClient.GetGroup(dn, gn)
+		group, err := zmsClient.GetGroup(dn, gn, nil)
 		if err != nil {
 			return err
 		}
@@ -222,7 +222,7 @@ func testAccCheckGroupMetaResourceStateDeleteDestroy(s *terraform.State) error {
 			return err
 		}
 		// make sure our group is deleted and 404 is returned
-		_, err = zmsClient.GetGroup(dn, gn)
+		_, err = zmsClient.GetGroup(dn, gn, nil)
 		if err == nil {
 			_ = zmsClient.DeleteGroup(dn, gn, AUDIT_REF)
 			return fmt.Errorf("athenz group still exists")

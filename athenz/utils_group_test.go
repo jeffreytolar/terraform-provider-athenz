@@ -20,7 +20,7 @@ func TestUpdateGroupMembers(t *testing.T) {
 	}
 	mockCtrl := gomock.NewController(t)
 	clientMock := client.NewMockZmsClient(mockCtrl)
-	clientMock.EXPECT().GetRole(gomock.Any(), gomock.Any()).Return(&zms.Role{Name: "test"}, nil).AnyTimes()
+	clientMock.EXPECT().GetRole(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(&zms.Role{Name: "test"}, nil).AnyTimes()
 	clientMock.EXPECT().PutRole(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 
 	// _ = args{

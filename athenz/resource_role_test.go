@@ -955,7 +955,7 @@ func TestAccGroupRoleInvalidResource(t *testing.T) {
 func cleanAllAccTestRoles(domain string, roles []string) {
 	zmsClient := testAccProvider.Meta().(client.ZmsClient)
 	for _, roleName := range roles {
-		_, err := zmsClient.GetRole(domain, roleName)
+		_, err := zmsClient.GetRole(domain, roleName, nil, nil)
 		if err == nil {
 			if err = zmsClient.DeleteRole(domain, roleName, AUDIT_REF); err != nil {
 				log.Printf("error deleting Role %s: %s", roleName, err)
@@ -978,7 +978,7 @@ func testAccCheckGroupRoleExists(n string, r *zms.Role) resource.TestCheckFunc {
 		dn, rn := fullResourceName[0], fullResourceName[1]
 
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		role, err := zmsClient.GetRole(dn, rn)
+		role, err := zmsClient.GetRole(dn, rn, nil, nil)
 
 		if err != nil {
 			return err
@@ -1171,7 +1171,7 @@ func testAccCheckGroupRoleDestroy(s *terraform.State) error {
 		fullResourceName := strings.Split(rs.Primary.ID, ROLE_SEPARATOR)
 		dn, rn := fullResourceName[0], fullResourceName[1]
 
-		_, err := zmsClient.GetRole(dn, rn)
+		_, err := zmsClient.GetRole(dn, rn, nil, nil)
 		if err == nil {
 			return fmt.Errorf("athenz Group Role still exists")
 		}

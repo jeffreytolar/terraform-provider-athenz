@@ -72,7 +72,7 @@ func resourceSelfServeGroupMembersCreate(ctx context.Context, d *schema.Resource
 	gn := d.Get("name").(string)
 	fullResourceName := dn + GROUP_SEPARATOR + gn
 
-	_, err := zmsClient.GetGroup(dn, gn)
+	_, err := zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -109,7 +109,7 @@ func resourceSelfServeGroupMembersRead(_ context.Context, d *schema.ResourceData
 	if err = d.Set("name", gn); err != nil {
 		return diag.FromErr(err)
 	}
-	_, err = zmsClient.GetGroup(dn, gn)
+	_, err = zmsClient.GetGroup(dn, gn, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -151,7 +151,7 @@ func resourceSelfServeGroupMembersUpdate(ctx context.Context, d *schema.Resource
 	membersToDelete := make([]*zms.GroupMember, 0)
 	membersToAdd := make([]*zms.GroupMember, 0)
 
-	_, err = zmsClient.GetGroup(dn, gn)
+	_, err = zmsClient.GetGroup(dn, gn, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

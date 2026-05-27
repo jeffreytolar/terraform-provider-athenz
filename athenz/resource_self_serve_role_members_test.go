@@ -165,7 +165,7 @@ func TestAccSelfServeRoleMembersExternalMembers(t *testing.T) {
 func cleanAllAccTestSelfServeRoleMembers(domain string, roles []string) {
 	zmsClient := testAccProvider.Meta().(client.ZmsClient)
 	for _, roleName := range roles {
-		_, err := zmsClient.GetRole(domain, roleName)
+		_, err := zmsClient.GetRole(domain, roleName, nil, nil)
 		if err == nil {
 			if err = zmsClient.DeleteRole(domain, roleName, AUDIT_REF); err != nil {
 				log.Printf("error deleting Role %s: %s", roleName, err)
@@ -196,7 +196,7 @@ func testAccCheckSelfServeRoleMembersExists(n string) resource.TestCheckFunc {
 		dn, rn := fullResourceName[0], fullResourceName[1]
 
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		_, err := zmsClient.GetRole(dn, rn)
+		_, err := zmsClient.GetRole(dn, rn, nil, nil)
 		if err != nil {
 			role := zms.Role{
 				Name: zms.ResourceName(rn),
@@ -212,7 +212,7 @@ func testAccCheckSelfServeRoleMembersExists(n string) resource.TestCheckFunc {
 func testAccCheckExternalMemberStillExists(domain, role, member string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		zmsClient := testAccProvider.Meta().(client.ZmsClient)
-		roleData, err := zmsClient.GetRole(domain, role)
+		roleData, err := zmsClient.GetRole(domain, role, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -291,7 +291,7 @@ func testAccCheckSelfServeRoleMembersDestroy(s *terraform.State) error {
 		fullResourceName := strings.Split(rs.Primary.ID, ROLE_SEPARATOR)
 		dn, rn := fullResourceName[0], fullResourceName[1]
 
-		role, err := zmsClient.GetRole(dn, rn)
+		role, err := zmsClient.GetRole(dn, rn, nil, nil)
 		if err == nil {
 			if len(role.RoleMembers) > 0 {
 				return fmt.Errorf("athenz Self Serve Role Members still exists")
@@ -314,7 +314,7 @@ func testAccCheckSelfServeRoleExternalMembersDestroy(s *terraform.State) error {
 		fullResourceName := strings.Split(rs.Primary.ID, ROLE_SEPARATOR)
 		dn, rn := fullResourceName[0], fullResourceName[1]
 
-		role, err := zmsClient.GetRole(dn, rn)
+		role, err := zmsClient.GetRole(dn, rn, nil, nil)
 		if err == nil {
 			if len(role.RoleMembers) == 0 {
 				return fmt.Errorf("athenz ext role member should be present")

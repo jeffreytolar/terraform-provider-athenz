@@ -236,7 +236,7 @@ func resourceRoleCreate(ctx context.Context, d *schema.ResourceData, meta interf
 	rn := d.Get("name").(string)
 	fullResourceName := dn + ROLE_SEPARATOR + rn
 
-	roleCheck, err := zmsClient.GetRole(dn, rn)
+	roleCheck, err := zmsClient.GetRole(dn, rn, nil, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -340,7 +340,7 @@ func resourceRoleRead(_ context.Context, d *schema.ResourceData, meta interface{
 	if err = d.Set("name", rn); err != nil {
 		return diag.FromErr(err)
 	}
-	role, err := zmsClient.GetRole(dn, rn)
+	role, err := zmsClient.GetRole(dn, rn, nil, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -521,7 +521,7 @@ func resourceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 	}
 	auditRef := d.Get("audit_ref").(string)
 
-	role, err := zmsClient.GetRole(dn, rn)
+	role, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

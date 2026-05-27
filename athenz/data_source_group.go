@@ -127,6 +127,12 @@ func DataSourceGroup() *schema.Resource {
 				Optional: true,
 				Default:  "",
 			},
+			"pending": {
+				Type:        schema.TypeBool,
+				Description: "If set, ZMS will include pending members in the returned group",
+				Optional:    true,
+				Default:     false,
+			},
 		},
 	}
 }
@@ -138,7 +144,8 @@ func dataSourceGroupRead(_ context.Context, d *schema.ResourceData, meta interfa
 	groupName := d.Get("name").(string)
 	fullResourceName := domainName + GROUP_SEPARATOR + groupName
 
-	group, err := zmsClient.GetGroup(domainName, groupName)
+	pending := d.Get("pending").(bool)
+	group, err := zmsClient.GetGroup(domainName, groupName, &pending)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {

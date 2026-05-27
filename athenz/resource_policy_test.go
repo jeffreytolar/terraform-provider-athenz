@@ -282,7 +282,7 @@ func cleanAllAccTestPolicies(domain string, policies, roles []string) {
 		}
 	}
 	for _, roleName := range roles {
-		_, err := zmsClient.GetRole(domain, roleName)
+		_, err := zmsClient.GetRole(domain, roleName, nil, nil)
 		if err == nil {
 			if err = zmsClient.DeleteRole(domain, roleName, AUDIT_REF); err != nil {
 				log.Printf("error deleting Role %s: %s", roleName, err)

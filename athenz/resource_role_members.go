@@ -78,7 +78,7 @@ func resourceRoleMembersCreate(ctx context.Context, d *schema.ResourceData, meta
 	rn := d.Get("name").(string)
 	fullResourceName := dn + ROLE_SEPARATOR + rn
 
-	_, err := zmsClient.GetRole(dn, rn)
+	_, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -116,7 +116,7 @@ func resourceRoleMembersRead(_ context.Context, d *schema.ResourceData, meta int
 	if err = d.Set("name", rn); err != nil {
 		return diag.FromErr(err)
 	}
-	role, err := zmsClient.GetRole(dn, rn)
+	role, err := zmsClient.GetRole(dn, rn, nil, nil)
 	switch v := err.(type) {
 	case rdl.ResourceError:
 		if v.Code == 404 {
@@ -155,7 +155,7 @@ func resourceRoleMembersUpdate(ctx context.Context, d *schema.ResourceData, meta
 	membersToDelete := make([]*zms.RoleMember, 0)
 	membersToAdd := make([]*zms.RoleMember, 0)
 
-	_, err = zmsClient.GetRole(dn, rn)
+	_, err = zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -192,7 +192,7 @@ func resourceRoleMembersDelete(_ context.Context, d *schema.ResourceData, meta i
 		return diag.FromErr(err)
 	}
 	auditRef := d.Get("audit_ref").(string)
-	role, err := zmsClient.GetRole(dn, rn)
+	role, err := zmsClient.GetRole(dn, rn, nil, nil)
 	if err != nil {
 		switch v := err.(type) {
 		case rdl.ResourceError:
