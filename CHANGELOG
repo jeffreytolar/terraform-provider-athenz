@@ -1,3 +1,9 @@
+v1.0.52 Release / May 28, 2026
+------------------------------
+- Add expand and pending inputs to athenz_role data source; pending to athenz_group
+- Add only_active filter on athenz_role and athenz_group data sources to drop
+  pending, expired, and system-disabled members
+
 v1.0.51 Release / Apr 11, 2026
 ------------------------------
 - support external members in roles and groups
