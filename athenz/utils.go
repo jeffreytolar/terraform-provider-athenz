@@ -314,6 +314,26 @@ func stringToTimestamp(val string) *rdl.Timestamp {
 	return &rdl.Timestamp{Time: expiration}
 }
 
+// filterActiveRoleMembers drops members that are pending (Approved == false),
+// expired (Expiration before now), or system-disabled (SystemDisabled != 0).
+func filterActiveRoleMembers(list []*zms.RoleMember) []*zms.RoleMember {
+	now := time.Now()
+	filtered := make([]*zms.RoleMember, 0, len(list))
+	for _, m := range list {
+		if m.Approved != nil && !*m.Approved {
+			continue
+		}
+		if m.Expiration != nil && m.Expiration.Time.Before(now) {
+			continue
+		}
+		if m.SystemDisabled != nil && *m.SystemDisabled != 0 {
+			continue
+		}
+		filtered = append(filtered, m)
+	}
+	return filtered
+}
+
 func flattenRoleMembers(list []*zms.RoleMember) []interface{} {
 	roleMembers := make([]interface{}, 0, len(list))
 	for _, m := range list {

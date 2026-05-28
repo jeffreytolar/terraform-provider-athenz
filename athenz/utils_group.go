@@ -2,10 +2,31 @@ package athenz
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/AthenZ/athenz/clients/go/zms"
 	"github.com/AthenZ/terraform-provider-athenz/client"
 )
+
+// filterActiveGroupMembers drops members that are pending (Approved == false),
+// expired (Expiration before now), or system-disabled (SystemDisabled != 0).
+func filterActiveGroupMembers(list []*zms.GroupMember) []*zms.GroupMember {
+	now := time.Now()
+	filtered := make([]*zms.GroupMember, 0, len(list))
+	for _, m := range list {
+		if m.Approved != nil && !*m.Approved {
+			continue
+		}
+		if m.Expiration != nil && m.Expiration.Time.Before(now) {
+			continue
+		}
+		if m.SystemDisabled != nil && *m.SystemDisabled != 0 {
+			continue
+		}
+		filtered = append(filtered, m)
+	}
+	return filtered
+}
 
 func expandDeprecatedGroupMembers(configured []interface{}) []*zms.GroupMember {
 	groupMembers := make([]*zms.GroupMember, 0, len(configured))

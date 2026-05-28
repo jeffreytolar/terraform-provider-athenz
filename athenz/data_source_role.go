@@ -24,6 +24,12 @@ func DataSourceRole() *schema.Resource {
 		Optional:    true,
 		Default:     false,
 	}
+	s["only_active"] = &schema.Schema{
+		Type:        schema.TypeBool,
+		Description: "If set, filter the returned members to drop pending, expired, and system-disabled entries",
+		Optional:    true,
+		Default:     false,
+	}
 	return &schema.Resource{
 		ReadContext: dataSourceRoleRead,
 		Schema:      s,
@@ -53,8 +59,12 @@ func dataSourceRoleRead(_ context.Context, d *schema.ResourceData, meta interfac
 	}
 	d.SetId(fullResourceName)
 
-	if len(role.RoleMembers) > 0 {
-		if err = d.Set("member", flattenRoleMembers(role.RoleMembers)); err != nil {
+	members := role.RoleMembers
+	if d.Get("only_active").(bool) {
+		members = filterActiveRoleMembers(members)
+	}
+	if len(members) > 0 {
+		if err = d.Set("member", flattenRoleMembers(members)); err != nil {
 			return diag.FromErr(err)
 		}
 	}
