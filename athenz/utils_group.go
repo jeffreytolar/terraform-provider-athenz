@@ -14,6 +14,9 @@ func filterActiveGroupMembers(list []*zms.GroupMember) []*zms.GroupMember {
 	now := time.Now()
 	filtered := make([]*zms.GroupMember, 0, len(list))
 	for _, m := range list {
+		if m == nil {
+			continue
+		}
 		if m.Approved != nil && !*m.Approved {
 			continue
 		}

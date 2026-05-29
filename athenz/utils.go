@@ -320,6 +320,9 @@ func filterActiveRoleMembers(list []*zms.RoleMember) []*zms.RoleMember {
 	now := time.Now()
 	filtered := make([]*zms.RoleMember, 0, len(list))
 	for _, m := range list {
+		if m == nil {
+			continue
+		}
 		if m.Approved != nil && !*m.Approved {
 			continue
 		}
