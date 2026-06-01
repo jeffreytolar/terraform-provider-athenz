@@ -9,6 +9,7 @@
   "azureTenant": "",
   "businessService": "",
   "certDnsDomain": "",
+  "costCenter": "",
   "description": "",
   "enabled": true,
   "entities": [],
